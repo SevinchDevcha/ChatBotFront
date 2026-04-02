@@ -14,9 +14,10 @@ export default function ChatPage() {
   const { messages, currentChatId, sending, historyLoading } = useSelector((s) => s.chat);
   const { user } = useSelector((s) => s.auth);
 
-  const [input, setInput]   = useState('');
-  const bottomRef           = useRef(null);
-  const inputRef            = useRef(null);
+  const [input, setInput]         = useState('');
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const bottomRef                 = useRef(null);
+  const inputRef                  = useRef(null);
 
   // Yangi xabar kelganda pastga scroll
   useEffect(() => {
@@ -99,9 +100,13 @@ export default function ChatPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
+              disabled={sending || isTranscribing}
+            />
+            <VoiceButton
+              onTranscribed={handleTranscribed}
+              onTranscribingChange={setIsTranscribing}
               disabled={sending}
             />
-            <VoiceButton onTranscribed={handleTranscribed} disabled={sending} />
             <button
               className={`send-btn ${sending || !input.trim() ? 'disabled' : ''}`}
               onClick={handleSend}

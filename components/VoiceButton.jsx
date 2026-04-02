@@ -4,34 +4,46 @@ import { useVoiceRecorder } from '../hooks/useVoiceRecorder';
 /**
  * VoiceButton — ovoz yozib olish tugmasi
  * onTranscribed: (text: string) => void  callback
+ * onTranscribingChange: (isTranscribing: boolean) => void  callback
  */
-export default function VoiceButton({ onTranscribed, disabled }) {
-  const { isRecording, isTranscribing, error, startRecording, stopRecording } =
-    useVoiceRecorder({ onTranscribed });
+const formatTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+export default function VoiceButton({ onTranscribed, onTranscribingChange, disabled }) {
+  const { isRecording, isTranscribing, error, recordingSeconds, startRecording, stopRecording } =
+    useVoiceRecorder({ onTranscribed, onTranscribingChange });
 
   if (isTranscribing) {
     return (
-      <button className="voice-btn transcribing" disabled title="Ovoz matnga o'tkazilmoqda...">
+      <button className="voice-btn transcribing" disabled title="Matnga o'tkazilmoqda...">
         <span className="voice-spinner" />
+        <span className="voice-label">Matnga o'tkazilmoqda...</span>
+      </button>
+    );
+  }
+
+  if (isRecording) {
+    return (
+      <button
+        className="voice-btn recording"
+        onMouseUp={stopRecording}
+        onTouchEnd={stopRecording}
+        title="Qo'yib yuboring — yuborish"
+      >
+        <StopIcon className="voice-icon" />
+        <span className="voice-timer">{formatTime(recordingSeconds)}</span>
       </button>
     );
   }
 
   return (
     <button
-      className={`voice-btn ${isRecording ? 'recording' : ''}`}
+      className="voice-btn"
       onMouseDown={startRecording}
-      onMouseUp={stopRecording}
       onTouchStart={startRecording}
-      onTouchEnd={stopRecording}
       disabled={disabled}
-      title={isRecording ? 'Qo\'yib yuboring — yuborish' : 'Bosib turing — gapiring'}
+      title="Bosib turing — gapiring"
     >
-      {isRecording ? (
-        <StopIcon className="voice-icon" />
-      ) : (
-        <MicrophoneIcon className="voice-icon" />
-      )}
+      <MicrophoneIcon className="voice-icon" />
     </button>
   );
 }
