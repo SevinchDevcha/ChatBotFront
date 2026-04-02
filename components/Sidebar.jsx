@@ -168,7 +168,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="sidebar-footer">
-        <Link to="/admin" className="admin-link">⚙️ Admin Panel</Link>
+        {/* <Link to="/admin" className="admin-link">⚙️ Admin Panel</Link> */}
         <button className="logout-btn" onClick={() => dispatch(logout())}>
           <ArrowRightOnRectangleIcon className="btn-icon" />
           Chiqish
