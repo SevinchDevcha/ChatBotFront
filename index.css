@@ -774,3 +774,31 @@ body {
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--navy-soft); border-radius: 4px; }
+
+
+/* ============ SKROLL MUAMMOSINI TUZATISH ============ */
+
+/* Admin sahifasiga kirganda body-dagi cheklovni olib tashlaymiz */
+.admin-layout {
+  height: auto;          /* 100vh emas, ichidagi kontentga qarab o'ssin */
+  min-height: 100vh;
+  overflow-y: visible;   /* Skrollni yoqish */
+  display: block;        /* Flex-dan keladigan xatolarni oldini olish uchun */
+}
+
+/* Agar React-da ushbu sahifa app-layout ichida render bo'layotgan bo'lsa */
+.app-layout:has(.admin-layout) {
+  height: auto;
+  overflow: visible;
+}
+
+/* Asosiy konteynerni sozlash */
+.admin-container {
+  padding-bottom: 50px;  /* Pastda biroz joy qolsin */
+}
+
+/* Hujjatlar ro'yxati kartasi ichidagi skrollni to'g'irlash */
+.entry-content {
+  max-height: none;      /* Matn kessilib qolmasligi uchun */
+  overflow-y: visible;
+}
