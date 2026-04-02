@@ -22,7 +22,7 @@ function AppRoutes() {
       <Route path="/auth" element={token ? <Navigate to="/" replace /> : <AuthPage />} />
       <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/auth" replace />} />
     </Routes>
   );
 }
