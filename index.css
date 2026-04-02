@@ -91,7 +91,13 @@ body { font-family: 'IBM Plex Sans', sans-serif; background: var(--navy); color:
 .app-layout { display: flex; height: 100vh; overflow: hidden; }
 
 /* ── SIDEBAR ─────────────────────────────────────── */
-.sidebar { width: var(--sidebar-w); background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar { width: var(--sidebar-w); background: var(--navy-mid); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; transition: width 0.3s ease; overflow: hidden; }
+.sidebar-collapsed { width: 48px; }
+
+.sidebar-toggle-row { display: flex; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.sidebar-toggle-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: none; border: none; cursor: pointer; border-radius: 8px; color: var(--text-muted); transition: background 0.15s, color 0.15s; }
+.sidebar-toggle-btn:hover { background: var(--glass); color: var(--text); }
+.toggle-icon { width: 20px; height: 20px; }
 .sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid var(--border); }
 .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .logo-icon { width: 36px; height: 36px; color: var(--gold); flex-shrink: 0; }

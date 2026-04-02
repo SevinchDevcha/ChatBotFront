@@ -9,19 +9,13 @@ import AuthPage from './features/auth/AuthPage';
 import { useSelector } from 'react-redux';
 import './index.css';
 
-// Protected Route wrapper
-function ProtectedRoute({ children }) {
-  const { token } = useSelector((s) => s.auth);
-  return token ? children : <Navigate to="/auth" replace />;
-}
-
 function AppRoutes() {
   const { token } = useSelector((s) => s.auth);
   return (
     <Routes>
       <Route path="/auth" element={token ? <Navigate to="/" replace /> : <AuthPage />} />
-      <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+      <Route path="/" element={token ? <ChatPage /> : <Navigate to="/auth" replace />} />
+      <Route path="/admin" element={token ? <AdminPage /> : <Navigate to="/auth" replace />} />
       <Route path="*" element={<Navigate to="/auth" replace />} />
     </Routes>
   );

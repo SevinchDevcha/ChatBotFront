@@ -75,9 +75,8 @@
 // }
 
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { newChat, selectChat, loadHistory, loadUserChats } from '../features/chat/chatSlice';
 import { logout } from '../features/auth/authSlice';
 import {
@@ -85,14 +84,15 @@ import {
   ChatBubbleLeftIcon,
   AcademicCapIcon,
   ArrowRightOnRectangleIcon,
+  Bars3Icon,
 } from '@heroicons/react/24/outline';
 
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(true);
   const dispatch = useDispatch();
-  const { user }                          = useSelector((s) => s.auth);
-  const { userChats, currentChatId }      = useSelector((s) => s.chat);
+  const { user }                     = useSelector((s) => s.auth);
+  const { userChats, currentChatId } = useSelector((s) => s.chat);
 
-  // Chatlar ro'yxatini yuklash
   useEffect(() => {
     if (user?.id) dispatch(loadUserChats(user.id));
   }, [user?.id, currentChatId, dispatch]);
@@ -113,67 +113,76 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
-      {/* Logo */}
-      <div className="sidebar-header">
-        <div className="logo">
-          <AcademicCapIcon className="logo-icon" />
-          <div>
-            <div className="logo-title">EduBot AI</div>
-            <div className="logo-sub">Oliy ta'lim vazirligi</div>
-          </div>
-        </div>
-
-        <button className="new-chat-btn" onClick={handleNewChat}>
-          <PlusIcon className="btn-icon" />
-          Yangi chat
+    <aside className={`sidebar${isOpen ? '' : ' sidebar-collapsed'}`}>
+      {/* Hamburger toggle */}
+      <div className="sidebar-toggle-row">
+        <button className="sidebar-toggle-btn" onClick={() => setIsOpen(!isOpen)}>
+          <Bars3Icon className="toggle-icon" />
         </button>
       </div>
 
-      {/* User info */}
-      <div className="sidebar-user">
-        <div className="user-avatar-sm">{user?.firstname?.[0]?.toUpperCase()}</div>
-        <div className="user-name">{user?.firstname} {user?.lastname}</div>
-      </div>
-
-      {/* Chats list */}
-      <div className="chat-list-section">
-        <div className="section-label">Chatlar tarixi</div>
-        {userChats.length === 0 ? (
-          <div className="empty-chats">
-            <ChatBubbleLeftIcon className="empty-icon" />
-            <p>Hali chatlar yo'q</p>
+      {isOpen && (
+        <>
+          {/* Logo */}
+          <div className="sidebar-header">
+            <div className="logo">
+              <AcademicCapIcon className="logo-icon" />
+              <div>
+                <div className="logo-title">EduBot AI</div>
+                <div className="logo-sub">Oliy ta'lim vazirligi</div>
+              </div>
+            </div>
+            <button className="new-chat-btn" onClick={handleNewChat}>
+              <PlusIcon className="btn-icon" />
+              Yangi chat
+            </button>
           </div>
-        ) : (
-          <ul className="chat-list">
-            {userChats.map((chat) => (
-              <li
-                key={chat.chatId}
-                className={`chat-item ${chat.chatId === currentChatId ? 'active' : ''}`}
-                onClick={() => handleSelectChat(chat.chatId)}
-              >
-                <ChatBubbleLeftIcon className="chat-item-icon" />
-                <div className="chat-item-content">
-                  <div className="chat-item-title">{chat.title}</div>
-                  <div className="chat-item-meta">
-                    <span>{chat.messageCount} xabar</span>
-                    <span>{formatDate(chat.lastTimestamp)}</span>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
 
-      {/* Footer */}
-      <div className="sidebar-footer">
-        {/* <Link to="/admin" className="admin-link">⚙️ Admin Panel</Link> */}
-        <button className="logout-btn" onClick={() => dispatch(logout())}>
-          <ArrowRightOnRectangleIcon className="btn-icon" />
-          Chiqish
-        </button>
-      </div>
+          {/* User info */}
+          <div className="sidebar-user">
+            <div className="user-avatar-sm">{user?.firstname?.[0]?.toUpperCase()}</div>
+            <div className="user-name">{user?.firstname} {user?.lastname}</div>
+          </div>
+
+          {/* Chats list */}
+          <div className="chat-list-section">
+            <div className="section-label">Chatlar tarixi</div>
+            {userChats.length === 0 ? (
+              <div className="empty-chats">
+                <ChatBubbleLeftIcon className="empty-icon" />
+                <p>Hali chatlar yo'q</p>
+              </div>
+            ) : (
+              <ul className="chat-list">
+                {userChats.map((chat) => (
+                  <li
+                    key={chat.chatId}
+                    className={`chat-item ${chat.chatId === currentChatId ? 'active' : ''}`}
+                    onClick={() => handleSelectChat(chat.chatId)}
+                  >
+                    <ChatBubbleLeftIcon className="chat-item-icon" />
+                    <div className="chat-item-content">
+                      <div className="chat-item-title">{chat.title}</div>
+                      <div className="chat-item-meta">
+                        <span>{chat.messageCount} xabar</span>
+                        <span>{formatDate(chat.lastTimestamp)}</span>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="sidebar-footer">
+            <button className="logout-btn" onClick={() => dispatch(logout())}>
+              <ArrowRightOnRectangleIcon className="btn-icon" />
+              Chiqish
+            </button>
+          </div>
+        </>
+      )}
     </aside>
   );
 }
